@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import com.algaworks.brewer.repository.Cervejas;
 import com.algaworks.brewer.repository.filter.CervejaFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -60,9 +61,10 @@ public class CervejasController {
 		mv.addObject("sabores", Sabor.values());
 		mv.addObject("estilos", estilos.findAll());
 		mv.addObject("origens", Origem.values());
-		mv.addObject("cervejas", cervejas.filtrar(cervejaFilter, pageable));
 
-		System.out.println(">>> pageNumber: " + pageable.getPageNumber());
+		Page<Cerveja> pagina = cervejas.filtrar(cervejaFilter, pageable);
+		mv.addObject("pagina", pagina);
+
 		return mv;
 	}
 	

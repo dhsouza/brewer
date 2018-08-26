@@ -2,6 +2,8 @@ package com.algaworks.brewer.repository.helper.cerveja;
 
 import com.algaworks.brewer.model.Cerveja;
 import com.algaworks.brewer.repository.filter.CervejaFilter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -24,7 +26,7 @@ public class CervejasImpl implements CervejasQueries {
     @SuppressWarnings("unchecked")
     @Override
     @Transactional(readOnly = true)
-    public List<Cerveja> filtrar(CervejaFilter filtro, Pageable pageable) {
+    public Page<Cerveja> filtrar(CervejaFilter filtro, Pageable pageable) {
         CriteriaBuilder builder = manager.getCriteriaBuilder();
         CriteriaQuery<Cerveja> query = builder.createQuery(Cerveja.class);
         Root<Cerveja> cervejaEntity = query.from(Cerveja.class);
@@ -39,10 +41,17 @@ public class CervejasImpl implements CervejasQueries {
 
         TypedQuery<Cerveja> typedQuery =  manager.createQuery(query);
 
+        int total = typedQuery.getResultList().size();
+
         typedQuery.setFirstResult(primeiroRegistro);
         typedQuery.setMaxResults(totalRegistrosPorPagina);
 
-        return typedQuery.getResultList();
+        return new PageImpl<>(typedQuery.getResultList(), pageable, total);
+    }
+
+    private Object getTotal(CervejaFilter filtro) {
+
+        return null;
     }
 
     private Predicate[] adicionarFiltro(CervejaFilter filtro, Root<Cerveja> cervejaEntity) {
