@@ -3,6 +3,7 @@ package com.algaworks.brewer.controller;
 import javax.validation.Valid;
 
 import com.algaworks.brewer.repository.Cervejas;
+import com.algaworks.brewer.repository.filter.CervejaFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,12 +53,12 @@ public class CervejasController {
 	}
 
 	@GetMapping("/cervejas")
-	public ModelAndView pesquisar() {
+	public ModelAndView pesquisar(CervejaFilter cervejaFilter, BindingResult result) {
 		ModelAndView mv = new ModelAndView("cerveja/PesquisaCervejas");
 		mv.addObject("sabores", Sabor.values());
 		mv.addObject("estilos", estilos.findAll());
 		mv.addObject("origens", Origem.values());
-		mv.addObject("cervejas", cervejas.findAll());
+		mv.addObject("cervejas", cervejas.filtrar(cervejaFilter));
 
 		return mv;
 	}
