@@ -23,6 +23,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.algaworks.brewer.validation.SKU;
+import org.springframework.util.StringUtils;
 
 @Entity
 @Table(name = "cerveja")
@@ -180,6 +181,10 @@ public class Cerveja {
 
 	public void setFoto(String foto) {
 		this.foto = foto;
+	}
+
+	public String getFotoOrMock() {
+		return !StringUtils.isEmpty(foto) ? foto : "cerveja-mock.png";
 	}
 
 	public String getContentType() {
