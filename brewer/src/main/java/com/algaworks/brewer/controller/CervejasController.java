@@ -1,7 +1,9 @@
 package com.algaworks.brewer.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.algaworks.brewer.controller.page.PageWrapper;
 import com.algaworks.brewer.repository.Cervejas;
 import com.algaworks.brewer.repository.filter.CervejaFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,14 +58,15 @@ public class CervejasController {
 	}
 
 	@GetMapping("/cervejas")
-	public ModelAndView pesquisar(CervejaFilter cervejaFilter, BindingResult result, @PageableDefault(size = 2) Pageable pageable) {
+	public ModelAndView pesquisar(CervejaFilter cervejaFilter, BindingResult result, @PageableDefault(size = 2) Pageable pageable,
+			HttpServletRequest httpServletRequest) {
 		ModelAndView mv = new ModelAndView("cerveja/PesquisaCervejas");
 		mv.addObject("sabores", Sabor.values());
 		mv.addObject("estilos", estilos.findAll());
 		mv.addObject("origens", Origem.values());
 
-		Page<Cerveja> pagina = cervejas.filtrar(cervejaFilter, pageable);
-		mv.addObject("pagina", pagina);
+		PageWrapper<Cerveja> paginaWrapper = new PageWrapper(cervejas.filtrar(cervejaFilter, pageable), httpServletRequest);
+		mv.addObject("pagina", paginaWrapper);
 
 		return mv;
 	}

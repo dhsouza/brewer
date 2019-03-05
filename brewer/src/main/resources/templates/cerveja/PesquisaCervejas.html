@@ -123,28 +123,28 @@
                             </a>
                         </td>
                     </tr>
-                <tr th:if="${#lists.isEmpty(pagina.content)}">
-                    <td colspan="7" >Nenhuma cerveja encontrada</td>
+                <tr th:if="${pagina.vazia}">
+                    <td colspan="7">Nenhuma cerveja encontrada</td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="col-sm-12 text-center" th:if="${not #lists.isEmpty(pagina.content)}">
+        <div class="col-sm-12 text-center" th:if="${not pagina.vazia}">
             <nav>
-                <ul class="pagination pagination-sm" th:with="paginaAtual=${pagina.number}">
+                <ul class="pagination pagination-sm" th:with="paginaAtual=${pagina.currentPage}">
                     <li th:class="${pagina.first} ? disabled">
-                        <a th:href="|?page=${paginaAtual - 1}|" th:remove="${pagina.first} ? tag"><span>&laquo;</span></a>
+                        <a th:href="${pagina.urlToCurrentPage(paginaAtual - 1)}" th:remove="${pagina.first} ? tag"><span>&laquo;</span></a>
                     </li>
 
                     <th:block th:each="p : ${#numbers.sequence(1, pagina.totalPages)}" th:with="numeroPagina=${p - 1}">
                         <li th:class="${paginaAtual == numeroPagina} ? active">
-                            <a th:href="|?page=${numeroPagina}|">[[${p}]]</a>
+                            <a th:href="${pagina.urlToCurrentPage(numeroPagina)}">[[${p}]]</a>
                         </li>
                     </th:block>
 
                     <li th:class="${pagina.last} ? disabled">
-                        <a  th:href="|?page=${paginaAtual + 1}|" th:remove="${pagina.last} ? tag"><span>&raquo;</span></a>
+                        <a th:href="${pagina.urlToCurrentPage(paginaAtual + 1)}" th:remove="${pagina.last} ? tag"><span>&raquo;</span></a>
                     </li>
                 </ul>
             </nav>
